@@ -1,0 +1,8 @@
+{
+  "name": "BE",
+  "version": "1.0.0",
+  "description": "a mini social",
+  "main": "src/server.ts",
+  "author": "truongluu",
+  "license": "MIT"
+}
