@@ -4,7 +4,7 @@ import { IProfile } from "./profile.interface";
 const ProfileSchema = new mongoose.Schema({
   user: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "user",
+    ref: "users",
   },
   company: {
     type: String,
@@ -36,7 +36,7 @@ const ProfileSchema = new mongoose.Schema({
         type: String,
         require: true,
       },
-      form: {
+      from: {
         type: Date,
         require: true,
       },
@@ -63,7 +63,7 @@ const ProfileSchema = new mongoose.Schema({
         type: String,
         require: true,
       },
-      form: {
+      from: {
         type: Date,
         require: true,
       },
@@ -80,6 +80,22 @@ const ProfileSchema = new mongoose.Schema({
       },
     },
   ],
+  following: [
+    {
+      user: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "users",
+      },
+    },
+  ],
+  followers: [
+    {
+      user: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "users",
+      },
+    },
+  ],
   social: {
     youtube: {
       type: String,
@@ -93,4 +109,7 @@ const ProfileSchema = new mongoose.Schema({
   },
 });
 
-export default mongoose.model<IProfile & mongoose.Document>('profiles',ProfileSchema)
+export default mongoose.model<IProfile & mongoose.Document>(
+  "profiles",
+  ProfileSchema
+);

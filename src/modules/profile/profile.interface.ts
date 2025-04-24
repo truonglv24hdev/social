@@ -10,7 +10,14 @@ export interface IProfile {
   experience: IExperience[];
   education: IEducation[];
   social: ISocial;
+  following: IFollower[];
+  follower: IFollower[];
   date: Date;
+}
+
+export interface IFollower {
+  user: string;
+  _id: string;
 }
 
 export interface IExperience {
@@ -34,7 +41,7 @@ export interface IEducation {
   description: string;
 }
 
-export interface ISocial extends Record<string,string> {
+export interface ISocial {
   youtube: string;
   facebook: string;
   twitter: string;

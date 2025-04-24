@@ -2,7 +2,6 @@ import e, { NextFunction, Request, Response } from "express";
 import UserService from "./user.service";
 import RegisterDto from "./dto/register.dto";
 import { TokenData } from "modules/auth";
-import IUser from "./user.interface";
 
 export default class UsersController {
   private userService = new UserService();

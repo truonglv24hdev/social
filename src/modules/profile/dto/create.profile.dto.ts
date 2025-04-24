@@ -1,12 +1,39 @@
+import { IsString, IsOptional, IsArray } from 'class-validator';
 export default class CreateProfileDto{
-  public company :string | undefined
-  public location :string | undefined
-  public website :string | undefined
-  public bio :string | undefined
-  public skills :string | undefined
-  public status :string | undefined
-  public youtube :string | undefined
-  public facebook :string | undefined
-  public twitter :string | undefined
+  @IsOptional()
+  @IsString()
+  company?: string;
+
+  @IsOptional()
+  @IsString()
+  location?: string;
+
+  @IsOptional()
+  @IsString()
+  website?: string;
+
+  @IsOptional()
+  @IsString()
+  bio?: string;
+
+  @IsOptional()
+  @IsArray()
+  skills?: string[];
+
+  @IsOptional()
+  @IsString()
+  status?: string;
+
+  @IsOptional()
+  @IsString()
+  youtube?: string;
+
+  @IsOptional()
+  @IsString()
+  facebook?: string;
+
+  @IsOptional()
+  @IsString()
+  twitter?: string;
   
 }
