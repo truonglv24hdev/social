@@ -11,11 +11,18 @@ export interface IProfile {
   education: IEducation[];
   social: ISocial;
   following: IFollower[];
-  follower: IFollower[];
+  followers: IFollower[];
+  friends: IFriend[]
+  friendRequests: IFriend[]
   date: Date;
 }
 
 export interface IFollower {
+  user: string;
+  _id: string;
+}
+
+export interface IFriend {
   user: string;
   _id: string;
 }

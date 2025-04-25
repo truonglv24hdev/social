@@ -5,6 +5,7 @@ import {
   IProfile,
   ISocial,
   IFollower,
+  IFriend,
 } from "./profile.interface";
 import profileModel from "./profile.model";
 import { HttpException } from "../../core/exceptions";
@@ -141,6 +142,217 @@ class ProfileService {
     );
     await profile.save();
     return profile;
+  }
+
+  public async follow(toProfileId: string, fromProfileId: string) {
+    const toProfile = await profileModel.findOne({ user: toProfileId });
+    const fromProfile = await profileModel.findOne({ user: fromProfileId });
+
+    if (!toProfile) {
+      throw new HttpException(400, "Not found toProfile");
+    }
+
+    if (!fromProfile) {
+      throw new HttpException(400, "Not found fromProfile");
+    }
+
+    if (
+      toProfile.followers &&
+      toProfile.followers.some(
+        (follower: IFollower) => follower.user.toString() === fromProfileId
+      )
+    ) {
+      throw new HttpException(400, "you have follower fromProfile");
+    }
+
+    if (
+      fromProfile.following &&
+      fromProfile.following.some(
+        (follow: IFollower) => follow.user.toString() === toProfileId
+      )
+    ) {
+      throw new HttpException(400, "toProfile have following");
+    }
+
+    await toProfile.updateOne(
+      { $push: { followers: { user: fromProfileId } } },
+      { new: true }
+    );
+    await fromProfile.updateOne(
+      { $push: { following: { user: toProfileId } } },
+      { new: true }
+    );
+
+    return fromProfile;
+  }
+
+  public async unfollow(toProfileId: string, fromProfileId: string) {
+    const toProfile = await profileModel.findOne({ user: toProfileId });
+    const fromProfile = await profileModel.findOne({ user: fromProfileId });
+
+    if (!toProfile) {
+      throw new HttpException(400, "Not found toProfile");
+    }
+
+    if (!fromProfile) {
+      throw new HttpException(400, "Not found fromProfile");
+    }
+
+    if (
+      toProfile.followers &&
+      !toProfile.followers.some(
+        (follower: IFollower) =>
+          follower.user.toString() === fromProfileId.toString()
+      )
+    ) {
+      throw new HttpException(400, "you not follower fromProfile");
+    }
+
+    if (
+      fromProfile.following &&
+      !fromProfile.following.some(
+        (follow: IFollower) => follow.user.toString() === toProfileId.toString()
+      )
+    ) {
+      throw new HttpException(400, "fromProfile have not following");
+    }
+
+    await toProfile.updateOne(
+      { $pull: { followers: { user: fromProfileId } } },
+      { new: true }
+    );
+    await fromProfile.updateOne(
+      { $pull: { following: { user: toProfileId } } },
+      { new: true }
+    );
+
+    return fromProfile;
+  }
+
+  public async addFriend(toProfileId: string, fromProfileId: string) {
+    const toProfile = await profileModel.findOne({ user: toProfileId });
+    const fromProfile = await profileModel.findOne({ user: fromProfileId });
+
+    if (!toProfile) {
+      throw new HttpException(400, "Not found toProfile");
+    }
+
+    if (!fromProfile) {
+      throw new HttpException(400, "Not found fromProfile");
+    }
+
+    if (
+      toProfile.friendRequests &&
+      toProfile.friendRequests.some(
+        (friendRequest: IFriend) =>
+          friendRequest.user.toString() === fromProfileId
+      )
+    ) {
+      throw new HttpException(400, "you have send request fromProfile");
+    }
+
+    if (
+      toProfile.friends &&
+      toProfile.friends.some(
+        (friend: IFriend) => friend.user.toString() === toProfileId
+      )
+    ) {
+      throw new HttpException(400, "You have friend fromProfile");
+    }
+
+    if (
+      fromProfile.friends &&
+      fromProfile.friends.some(
+        (friend: IFriend) => friend.user.toString() === toProfileId
+      )
+    ) {
+      throw new HttpException(400, "You have friend toProfile");
+    }
+
+    await toProfile.updateOne(
+      { $push: { friendRequests: { user: fromProfileId, date: Date.now() } } },
+      { new: true }
+    );
+
+    return toProfile;
+  }
+
+  public async acceptFriend(toProfileId: string, fromProfileId: string) {
+    const toProfile = await profileModel.findOne({ user: toProfileId });
+    const fromProfile = await profileModel.findOne({ user: fromProfileId });
+
+    if (!toProfile) {
+      throw new HttpException(400, "Not found toProfile");
+    }
+
+    if (!fromProfile) {
+      throw new HttpException(400, "Not found fromProfile");
+    }
+
+    if (
+      toProfile.friendRequests &&
+      !toProfile.friendRequests.some(
+        (friend: IFriend) => friend.user.toString() === fromProfileId.toString()
+      )
+    ) {
+      throw new HttpException(400, "you not have friend request fromProfile");
+    }
+
+    await toProfile.updateOne(
+      {
+        $pull: { friendRequests: { user: fromProfileId } },
+        $push: { friends: { user: fromProfileId } },
+      },
+      { new: true }
+    );
+    await fromProfile.updateOne(
+      { $push: { friends: { user: toProfileId } } },
+      { new: true }
+    );
+
+    return fromProfile;
+  }
+
+  public async unFriend(toProfileId: string, fromProfileId: string) {
+    const toProfile = await profileModel.findOne({ user: toProfileId });
+    const fromProfile = await profileModel.findOne({ user: fromProfileId });
+
+    if (!toProfile) {
+      throw new HttpException(400, "Not found toProfile");
+    }
+
+    if (!fromProfile) {
+      throw new HttpException(400, "Not found fromProfile");
+    }
+
+    if (
+      toProfile.friends &&
+      !toProfile.friends.some(
+        (friend: IFriend) => friend.user.toString() === fromProfileId.toString()
+      )
+    ) {
+      throw new HttpException(400, "you not friend fromProfile");
+    }
+
+    if (
+      fromProfile.friends &&
+      !fromProfile.friends.some(
+        (friend: IFriend) => friend.user.toString() === toProfileId.toString()
+      )
+    ) {
+      throw new HttpException(400, "fromProfile have not friend");
+    }
+
+    await toProfile.updateOne(
+      { $pull: { friends: { user: fromProfileId } } },
+      { new: true }
+    );
+    await fromProfile.updateOne(
+      { $pull: { friends: { user: toProfileId } } },
+      { new: true }
+    );
+
+    return fromProfile;
   }
 }
 

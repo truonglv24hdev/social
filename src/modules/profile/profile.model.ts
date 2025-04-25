@@ -96,6 +96,24 @@ const ProfileSchema = new mongoose.Schema({
       },
     },
   ],
+  friends: [
+    {
+      user: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "users",
+      },
+      date: Date,
+    },
+  ],
+  friendRequests: [
+    {
+      user: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "users",
+      },
+      date: Date,
+    },
+  ],
   social: {
     youtube: {
       type: String,

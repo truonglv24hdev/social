@@ -1,4 +1,4 @@
-import e, { NextFunction, Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import UserService from "./user.service";
 import RegisterDto from "./dto/register.dto";
 import { TokenData } from "modules/auth";

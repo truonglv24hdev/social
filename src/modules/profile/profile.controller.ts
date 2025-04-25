@@ -1,4 +1,4 @@
-import e, { NextFunction, Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import ProfileService from "./profile.service";
 import IUser from "modules/user/user.interface";
 import CreateProfileDto from "./dto/create.profile.dto";
@@ -159,6 +159,81 @@ class ProfileController {
         educationId
       );
       res.status(200).json(result);
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  public follow = async (req: Request, res: Response, next: NextFunction) => {
+    const fromProfileId = req.user.id;
+    const toProfileId = req.params.id;
+
+    try {
+      const fromProfile = await this.profileService.follow(
+        toProfileId,
+        fromProfileId
+      );
+      res.status(200).json(fromProfile);
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  public unfollow = async (req: Request, res: Response, next: NextFunction) => {
+    const fromProfileId = req.user.id;
+    const toProfileId = req.params.id;
+
+    try {
+      const fromProfile = await this.profileService.unfollow(
+        toProfileId,
+        fromProfileId
+      );
+      res.status(200).json(fromProfile);
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  public addFriend = async (req: Request, res: Response, next: NextFunction) => {
+    const fromProfileId = req.user.id;
+    const toProfileId = req.params.id;
+
+    try {
+      const fromProfile = await this.profileService.addFriend(
+        toProfileId,
+        fromProfileId
+      );
+      res.status(200).json(fromProfile);
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  public acceptFriend = async (req: Request, res: Response, next: NextFunction) => {
+    const fromProfileId = req.user.id;
+    const toProfileId = req.params.id;
+
+    try {
+      const fromProfile = await this.profileService.acceptFriend(
+        toProfileId,
+        fromProfileId
+      );
+      res.status(200).json(fromProfile);
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  public unFriend = async (req: Request, res: Response, next: NextFunction) => {
+    const fromProfileId = req.user.id;
+    const toProfileId = req.params.id;
+
+    try {
+      const fromProfile = await this.profileService.unFriend(
+        toProfileId,
+        fromProfileId
+      );
+      res.status(200).json(fromProfile);
     } catch (error) {
       next(error);
     }
